@@ -1,20 +1,18 @@
-CC = gcc 
+CC = g++ 
 CFLAGS = #-O2 #-Wall -Wextra
 PROG = sqserver
-SRC = main.c daemon.c encryption.c param.c server.c log.c handle_client.c
-HDR = sqserver.h daemon.h encryption.h param.h server.h log.h handle_client.h #$(SRC:%.c=%.h)
-OBJ = $(SRC:%.c=%.o)
+SRC = main.cpp
+HDR = sqserver.h #$(SRC:%.cpp=%.h)
+OBJ = $(SRC:%.cpp=%.o)
 GIT = $(SRC) $(HDR) Makefile info.txt README.md runscript.sh
 DEP = .dep.mk
 LOGDIR = logs/
 
 
-all: $(PROG)
-
 $(PROG): $(OBJ) $(DEP)
 	$(CC) $(CFLAGS) -o $(PROG) $(OBJ)
 	
-%.o: %.c
+%.o: %.cpp
 	$(CC) $(CFLAGS) -c $<
 	
 dep: $(DEP)

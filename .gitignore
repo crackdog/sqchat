@@ -36,3 +36,9 @@
 ehthumbs.db
 Thumbs.db
 
+# Other files #
+###############
+*.pid
+.dep.mk
+sqserver
+
