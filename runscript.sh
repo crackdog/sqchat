@@ -89,7 +89,7 @@ case "$1" in
             ;;
   restart)  $0 stop && $0 start
             ;;
-  *)        if [ -e $PIDFILE ]
+  status)   if [ -e $PIDFILE ]
               then
                 if (kill -0 $(cat $PIDFILE) 2> /dev/null );
                   then
@@ -101,6 +101,8 @@ case "$1" in
               else
                 echo 'server is not running'
             fi
+            ;;
+  *)        echo "usage: $0 {start|stop|restart|status}"
             ;;
 esac
 
