@@ -3,6 +3,7 @@
 SERVERBIN="sqserver"
 PIDFILE="${SERVERBIN}.pid"
 LOGDIR="$(pwd)/logs"
+CONFDIR="$(pwd)/conf"
 COMMANDLINE_PARAMETERS="-s ${LOGDIR}"
 
 start() {
