@@ -1,7 +1,7 @@
 #include "sqserver.h"
 #include "encryption.h"
-
-static binarydata key = {NULL, 0};
+#include <stdlib.h>
+#include <time.h>
 
 const char base64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -25,10 +25,39 @@ static const unsigned char decodeb64[] = {
 
 Encryption::Encryption()
 {
+  key = keygen();
+}
+
+Encryption::Encryption(const char * base64key)
+{
+  key = base64decodebin(base64key);
+}
+
+Encryption::Encryption(size_t keylength)
+{
+  key = keygen(keylength);
 }
 
 Encryption::~Encryption()
 {
+  delete key.data;
+  key.len = 0;
+}
+
+binarydata Encryption::keygen(size_t length)
+{
+  binarydata ret;
+  ret.data = new uint8_t[length];
+  ret.len = length;
+  
+  srand(time(NULL));
+  
+  for(size_t i = 0; i < length; i++)
+  {
+    ret.data[i] = rand() % 0xff;
+  }
+  
+  return ret;
 }
 
 binarydata Encryption::base64decodebin(const char * databuf)
@@ -49,7 +78,7 @@ binarydata Encryption::base64decodebin(const char * databuf)
   
   for(dataindex = 0, i = 0, bufferindex = 0, x = 0; dataindex < datalen; dataindex++)
   {
-    nextByte = decodeb64[databuf[dataindex]];
+    nextByte = decodeb64[(int) databuf[dataindex]]; //int cast only to avoid a warning
     
     if(nextByte == INVALID)
     {
@@ -167,4 +196,24 @@ const char * Encryption::base64encode(const char * databuf)
 {
   return base64encodebin(databuf, strlen(databuf) + 1);
 }
+
+const char * Encryption::getKey()
+{
+  return this->base64encodebin(key.data, key.len);
+}
+
+void Encryption::setKey(const char * base64key)
+{
+  this->key = base64decodebin(base64key);
+}
+
+const char * Encryption::generateKey(size_t length)
+{
+  binarydata newkey;
+  
+  newkey = keygen(length);
+  
+  return base64encodebin(newkey.data, newkey.len);
+}
+
 

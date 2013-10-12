@@ -1,5 +1,5 @@
 CC = g++ 
-CFLAGS = #-O2 #-Wall -Wextra
+CFLAGS = -Wall -Wextra #-O2
 PROG = sqserver
 SRC = main.cpp encryption.cpp
 HDR = sqserver.h encryption.h #$(SRC:%.cpp=%.h)

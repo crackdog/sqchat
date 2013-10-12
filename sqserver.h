@@ -29,6 +29,7 @@ using namespace std;
 #define TS3_SERVER_PORT 10011
 #define SERVER_PORT     6666
 #define CLOGINFILENAME  "clientlogin.conf"
+#define KEYLENGTH       256
 //************************
 
 //++++++++++++++++++++++++
