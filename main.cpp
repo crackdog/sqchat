@@ -4,12 +4,12 @@
 using namespace std;
 
 const char * param_arr[] = {
-  "-g",
-  "-d",
-  "-e",
-  "-bd",
-  "-be",
-  "-s",
+  "-g",   //0
+  "-d",   //1
+  "-e",   //2
+  "-bd",  //3
+  "-be",  //4
+  "-s",   //5
   NULL };
 
 int getparam(const char * paramv[], const char * arg)
@@ -57,6 +57,46 @@ int main(int argc, char * argv[])
       else
       {
         cout << Encryption::generateKey(atoi(argv[2])) << endl;
+      }
+      break;
+    }
+    case 3: //base64decode
+    {
+      if(argc > 2) //take next argument as input
+      {
+        cout << Encryption::base64decode(argv[2]) << endl;
+      }
+      else //take stdin as input
+      {
+        char buffer[BUF_SIZE];
+        while(!feof(stdin))
+        {
+          if(fgets(buffer, BUF_SIZE, stdin) == 0)
+          {
+            break;
+          }
+          cout << Encryption::base64decode(buffer) << endl;
+        }
+      }
+      break;
+    }
+    case 4: //base64encode
+    {
+      if(argc > 2) //take next argument as input
+      {
+        cout << Encryption::base64encode(argv[2]) << endl;
+      }
+      else //take stdin as input
+      {
+        char buffer[BUF_SIZE];
+        while(!feof(stdin))
+        {
+          if(fgets(buffer, BUF_SIZE, stdin) == 0)
+          {
+            break;
+          }
+          cout << Encryption::base64encode(buffer) << endl;
+        }
       }
       break;
     }
