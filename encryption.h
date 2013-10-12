@@ -5,14 +5,14 @@
 typedef struct {
   uint8_t * data;
   size_t len;
-} binarydata;
+} binarydata; //used to store binary data
 
 class Encryption
 {
   private:
-    binarydata key;
+    binarydata key; //contains the current key
     
-    static binarydata keygen(size_t length = 32);
+    static binarydata keygen(size_t length = 32); //generates a new key
   public:
     Encryption(); //constructor to create a standard key
     Encryption(const char * base64key); //constructor to set a custom key
@@ -24,9 +24,9 @@ class Encryption
     static binarydata base64decodebin(const char * databuf); //decode a base64 string to binarydata
     static const char * base64encodebin(const void * databuf, size_t datalen); //encode binarydata to a base64 string
     
-    const char * getKey(void);
-    void setKey(const char * base64key);
-    static const char * generateKey(size_t length = 32);
+    const char * getKey(void); //returns the current key
+    void setKey(const char * base64key); //set a new key
+    static const char * generateKey(size_t length = 32); //returns a new generated key
 };
 
 #endif
