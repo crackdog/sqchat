@@ -13,6 +13,7 @@ class Encryption
     binarydata key; //contains the current key
     
     static binarydata keygen(size_t length = 32); //generates a new key
+    void xor_crypt(void * buffer, size_t length); //crypts a buffer with the key
   public:
     Encryption(); //constructor to create a standard key
     Encryption(const char * base64key); //constructor to set a custom key
@@ -27,6 +28,9 @@ class Encryption
     const char * getKey(void); //returns the current key
     void setKey(const char * base64key); //set a new key
     static const char * generateKey(size_t length = 32); //returns a new generated key
+    
+    char * encrypt_msg(const char * msg); //returns a zero-terminated string
+    char * decrypt_msg(const char * encrypted_msg); //returns a zero-terminated string
 };
 
 #endif

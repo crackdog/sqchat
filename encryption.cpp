@@ -216,4 +216,19 @@ const char * Encryption::generateKey(size_t length)
   return base64encodebin(newkey.data, newkey.len);
 }
 
+void Encryption::xor_crypt(void * buffer, size_t length)
+{
+  size_t i, j;
+  uint8_t * buf = (uint8_t *) buffer;
+  for(i = 0, j = 0; i < length; i++)
+  {
+    if(j >= key.len)
+    {
+      j = 0;
+    }
+    
+    buf[i] ^= key.data[j++];
+  }
+}
+
 
