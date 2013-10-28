@@ -31,6 +31,8 @@ class Encryption
     
     const char * encrypt_msg(const char * msg); //returns a zero-terminated string
     const char * decrypt_msg(const char * encrypted_msg); //returns a zero-terminated string
+    
+    int loadKeyFile(const char * filename);
 };
 
 #endif

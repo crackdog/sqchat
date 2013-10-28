@@ -259,5 +259,30 @@ const char * Encryption::decrypt_msg(const char * encrypted_msg)
   return (const char *) msgbuf.data;
 }
 
+int Encryption::loadKeyFile(const char * filename)
+{
+  FILE * keyfile;
+  char * buffer = new char[BUF_SIZE];
+  
+  keyfile = fopen(filename, "r");
+  
+  if(keyfile != NULL)
+  {
+    if(fgets(buffer, BUF_SIZE, keyfile) != NULL)
+    {
+      this->key = base64decodebin(buffer);
+    }
+    fclose(keyfile);
+    
+    return TRUE;
+  }
+  else
+  {
+    key.data = NULL;
+    key.len = 0;
+    return FALSE;
+  }
+}
+
 
 
