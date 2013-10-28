@@ -42,4 +42,4 @@ Thumbs.db
 *.pid
 .dep.mk
 sqserver
-
+*.key
