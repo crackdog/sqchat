@@ -231,4 +231,33 @@ void Encryption::xor_crypt(void * buffer, size_t length)
   }
 }
 
+const char * Encryption::encrypt_msg(const char * msg)
+{
+  size_t msglen;
+  uint8_t * buffer;
+  const char * res;
+  
+  msglen = strlen(msg) + 1;
+  
+  buffer = new uint8_t[msglen + 1]; //maybe without +1
+  memcpy(buffer, msg, msglen);
+  
+  xor_crypt(buffer, msglen);
+  res = base64encodebin(buffer, msglen);
+  delete buffer;
+  
+  return res;
+}
+
+const char * Encryption::decrypt_msg(const char * encrypted_msg)
+{
+  binarydata msgbuf;
+  
+  msgbuf = this->base64decodebin(encrypted_msg);
+  this->xor_crypt(msgbuf.data, msgbuf.len);
+  
+  return (const char *) msgbuf.data;
+}
+
+
 

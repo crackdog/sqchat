@@ -29,8 +29,8 @@ class Encryption
     void setKey(const char * base64key); //set a new key
     static const char * generateKey(size_t length = 32); //returns a new generated key
     
-    char * encrypt_msg(const char * msg); //returns a zero-terminated string
-    char * decrypt_msg(const char * encrypted_msg); //returns a zero-terminated string
+    const char * encrypt_msg(const char * msg); //returns a zero-terminated string
+    const char * decrypt_msg(const char * encrypted_msg); //returns a zero-terminated string
 };
 
 #endif
