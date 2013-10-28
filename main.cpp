@@ -36,6 +36,8 @@ int getparam(const char * paramv[], const char * arg)
 
 int main(int argc, char * argv[])
 {
+  const char * keyfile = "test.key";
+
   if(argc < 2 || strncmp(argv[1], "-h", 2) == 0)
   {
     cout << "usage: " << argv[0] << " <options> [<optional arguments>]" << endl;
@@ -57,6 +59,52 @@ int main(int argc, char * argv[])
       else
       {
         cout << Encryption::generateKey(atoi(argv[2])) << endl;
+      }
+      break;
+    }
+    case 1: //decrypt
+    {
+      Encryption * e = new Encryption();
+      e->loadKeyFile(keyfile);
+      
+      if(argc > 2)
+      {
+        cout << e->decrypt_msg(argv[2]) << endl;
+      }
+      else
+      {
+        char buffer[BUF_SIZE];
+        while(!feof(stdin))
+        {
+          if(fgets(buffer, BUF_SIZE, stdin) == 0)
+          {
+            break;
+          }
+          cout << e->decrypt_msg(buffer) << endl;
+        }
+      }
+      break;
+    }
+    case 2: //encrypt
+    {
+      Encryption * e = new Encryption();
+      e->loadKeyFile(keyfile);
+        
+      if(argc > 2)
+      {
+        cout << e->encrypt_msg(argv[2]) << endl;
+      }
+      else //take stdin as input
+      {
+        char buffer[BUF_SIZE];
+        while(!feof(stdin))
+        {
+          if(fgets(buffer, BUF_SIZE, stdin) == 0)
+          {
+            break;
+          }
+          cout << e->encrypt_msg(buffer) << endl;
+        }
       }
       break;
     }
