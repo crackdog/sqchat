@@ -1,5 +1,6 @@
 #include "sqserver.h"
 #include "encryption.h"
+#include "connection.h"
 
 using namespace std;
 
@@ -156,6 +157,15 @@ int main(int argc, char * argv[])
           cout << Encryption::base64encode(buffer) << endl;
         }
       }
+      break;
+    }
+    case 5: //starting server functions...
+    {
+      Connection c;
+      Encryption e;
+      
+      c.start(e);
+      
       break;
     }
     default:

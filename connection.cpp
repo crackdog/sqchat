@@ -12,3 +12,9 @@ Connection::~Connection()
   cout << "destruct..." << endl;
 }
 
+void Connection::start(Encryption c)
+{
+  cout << "starting server..." << endl;
+  this->crypt = c;
+}
+
