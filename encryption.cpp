@@ -39,7 +39,7 @@ Encryption::Encryption(size_t keylength)
 
 Encryption::~Encryption()
 {
-  delete key.data;
+  key.data = NULL; //created an error when using delete key.data...
   key.len = 0;
 }
 
