@@ -13,6 +13,8 @@ class Connection
     ~Connection();
     
     void start(Encryption c);
+    
+    void connect2Ts(void);
 };
 
 #endif
