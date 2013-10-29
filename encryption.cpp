@@ -1,6 +1,5 @@
 #include "sqserver.h"
 #include "encryption.h"
-#include <stdlib.h>
 #include <time.h>
 
 const char base64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
