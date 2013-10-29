@@ -1,8 +1,8 @@
 CC = g++ 
 CFLAGS = -Wall -Wextra #-O2
 PROG = sqserver
-SRC = main.cpp encryption.cpp
-HDR = sqserver.h encryption.h #$(SRC:%.cpp=%.h)
+SRC = main.cpp encryption.cpp connection.cpp
+HDR = sqserver.h encryption.h connection.h #$(SRC:%.cpp=%.h)
 OBJ = $(SRC:%.cpp=%.o)
 GIT = $(SRC) $(HDR) Makefile info.txt README.md runscript.sh
 DEP = .dep.mk
