@@ -41,10 +41,20 @@ int main(int argc, char * argv[])
   if(argc < 2 || strncmp(argv[1], "-h", 2) == 0)
   {
     cout << "usage: " << argv[0] << " <options> [<optional arguments>]" << endl;
+    cout << "the optional arguments are:" << endl;
     for(int i = 0; param_arr[i] != NULL; i++)
     {
-      cout << param_arr[i] << endl;
+      cout << param_arr[i];
+      if(param_arr[i+1] == NULL)
+      {
+        cout << endl;
+      }
+      else
+      {
+        cout << ", ";
+      }
     }
+    cout << "the default keyfile for encryption is 'test.key'" << endl;
     return 0;
   }
   
