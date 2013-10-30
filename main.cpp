@@ -232,6 +232,10 @@ int main(int argc, char * argv[])
         {
           cout << "couldn't connect to ts3 server" << endl;
         }
+        else
+        {
+          c.ts3Login(CLOGINFILENAME);
+        }
         
         c.startServer();
         
