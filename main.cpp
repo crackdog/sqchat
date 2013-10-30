@@ -35,6 +35,39 @@ int getparam(const char * paramv[], const char * arg)
   }
 }
 
+int init_server_socket(int local_port)
+{
+  cout << "initialize server socket on port '" << local_port << "'" << endl;
+  
+  int s;
+  struct sockaddr_in addr;
+
+  s = socket(PF_INET, SOCK_STREAM, 0);
+  if (s == -1)
+  {
+    cout << "socket() failed" << endl;
+    return -1;
+  }
+
+  addr.sin_addr.s_addr = INADDR_ANY;
+  addr.sin_port = htons(local_port);
+  addr.sin_family = AF_INET;
+
+  if(bind(s, (struct sockaddr*)&addr, sizeof(addr)) == -1)
+  {
+    cout << "bind() failed" << endl;
+    return -1;
+  }
+
+  if(listen(s, 3) == -1)
+  {
+    cout << "listen() failed" << endl;
+    return -1;
+  }
+
+  return s;
+}
+
 int main(int argc, char * argv[])
 {
   const char * keyfile = "test.key";
@@ -161,14 +194,49 @@ int main(int argc, char * argv[])
     }
     case 5: //starting server functions...
     {
-      Encryption e;
-      Connection c;
+      int loop = TRUE;
+      while(loop)
+      {
+        int serverSocket, clientSocket;
+        socklen_t client_addr_len;
+        struct sockaddr_in client_addr;
+        
+        //creating server socket
+        serverSocket = init_server_socket(SERVER_PORT);
+        if(serverSocket == -1)
+        {
+          cerr << "error at 'init_server_socket()'" << endl;
+          return 5;
+        }
+        
+        //waiting for connection
+        clientSocket = accept(serverSocket, (struct sockaddr *) &client_addr, &client_addr_len);
+        if(clientSocket == -1)
+        {
+          cerr << "error at accept()" << endl;
+          continue;
+        }
       
-      e.loadKeyFile(keyfile);
-      c.setEncryption(e);
-      
-      
-      
+        //create new fork and handle the client
+        
+        
+        Encryption e;
+        Connection c;
+        
+        e.loadKeyFile(keyfile);
+        c.setEncryption(e);
+        
+        c.setClientConnection(clientSocket);
+        
+        if(!c.connectToTs(TS3_SERVER_PORT))
+        {
+          cout << "couldn't connect to ts3 server" << endl;
+        }
+        
+        c.startServer();
+        
+        loop = FALSE;
+      }
       break;
     }
     default:
