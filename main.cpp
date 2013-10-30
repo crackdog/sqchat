@@ -161,10 +161,13 @@ int main(int argc, char * argv[])
     }
     case 5: //starting server functions...
     {
-      Connection c;
       Encryption e;
+      Connection c;
       
-      c.start(e);
+      e.loadKeyFile(keyfile);
+      c.setEncryption(e);
+      
+      
       
       break;
     }
