@@ -8,13 +8,22 @@ class Connection
 {
   private:
     Encryption crypt;
+    int ts3Sock;
+    int clientSock;
+    
+    int conditions(void); //0 = false, 1 = true
+    int sendMsgToClient(const char * msg);
+    int recvMsgFromClient(void); //is blocking...
+    
   public:
     Connection();
     ~Connection();
     
-    void start(Encryption c);
+    void setEncryption(Encryption c);
+    void setTsConnection(int tsSocket);
+    void setClientConnection(int clientSocket);
     
-    void connect2Ts(void);
+    int startServer(void); //returns 0 for no error...
 };
 
 #endif
