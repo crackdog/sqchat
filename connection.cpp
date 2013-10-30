@@ -81,19 +81,20 @@ void Connection::setClientConnection(int clientSocket)
   this->clientSock = clientSocket;
 }
 
-void Connection::ts3Login(const char * loginfile)
+void Connection::sendTextFileCommands(int socket, const char * loginfile)
 {
   FILE * loginf;
-  loginf = fopen(loginfile, "r");
   char * buffer = new char[BUF_SIZE];
   
-  if(ts3Sock != -1)
+  loginf = fopen(loginfile, "r");
+  
+  if(socket != -1 && loginf != NULL)
   {  
     while(!feof(loginf))
     {
       if(fgets(buffer, BUF_SIZE, loginf) != NULL)
       {
-        send(ts3Sock, buffer, strlen(buffer), 0);
+        send(socket, buffer, strlen(buffer), 0);
       }
     }
   }
@@ -105,6 +106,8 @@ int Connection::startServer()
   
   msg = crypt.encrypt_msg("connected");
   send(clientSock, msg, strlen(msg), 0);
+  
+  sendTextFileCommands(clientSock, "README.md");
   
   return 0;
 }
