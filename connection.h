@@ -12,8 +12,6 @@ class Connection
     int clientSock;
     
     int conditions(void); //0 = false, 1 = true
-    int sendMsgToClient(const char * msg);
-    int recvMsgFromClient(void); //is blocking...
     
   public:
     Connection();
@@ -22,6 +20,7 @@ class Connection
     void setEncryption(Encryption c);
     //void setTsConnection(int tsSocket);
     int connectToTs(unsigned int port);
+    void ts3Login(const char * loginfile);
     void setClientConnection(int clientSocket);
     
     int startServer(void); //returns 0 for no error...

@@ -81,6 +81,24 @@ void Connection::setClientConnection(int clientSocket)
   this->clientSock = clientSocket;
 }
 
+void Connection::ts3Login(const char * loginfile)
+{
+  FILE * loginf;
+  loginf = fopen(loginfile, "r");
+  char * buffer = new char[BUF_SIZE];
+  
+  if(ts3Sock != -1)
+  {  
+    while(!feof(loginf))
+    {
+      if(fgets(buffer, BUF_SIZE, loginf) != NULL)
+      {
+        send(ts3Sock, buffer, strlen(buffer), 0);
+      }
+    }
+  }
+}
+
 int Connection::startServer()
 {
   const char * msg;
