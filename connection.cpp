@@ -13,6 +13,14 @@ Connection::Connection()
 Connection::~Connection()
 {
   cout << "destruct..." << endl;
+  if(this->clientSock != -1)
+  {
+    close(clientSock);
+  }
+  if(this->ts3Sock != -1)
+  {
+    close(ts3Sock);
+  }
 }
 
 int Connection::conditions()
