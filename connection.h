@@ -20,7 +20,8 @@ class Connection
     ~Connection();
     
     void setEncryption(Encryption c);
-    void setTsConnection(int tsSocket);
+    //void setTsConnection(int tsSocket);
+    int connectToTs(unsigned int port);
     void setClientConnection(int clientSocket);
     
     int startServer(void); //returns 0 for no error...
