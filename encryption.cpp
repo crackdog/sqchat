@@ -136,7 +136,7 @@ const char * Encryption::base64encodebin(const void * databuf, size_t datalen)
   //datalen--;
   
   data = (const uint8_t *) databuf;
-  resultlen = (((datalen + (datalen % 3)) / 3) * 4) + 1;
+  resultlen = (((datalen + (datalen % 3)) / 3) * 4) + 2;
   
   result = (char *) malloc(resultlen * sizeof(char));
   
@@ -182,6 +182,7 @@ const char * Encryption::base64encodebin(const void * databuf, size_t datalen)
     }
   }
   
+  result[j++] = '\n';
   result[j] = '\0';
   return result;
 }
