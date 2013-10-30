@@ -20,7 +20,7 @@ class Connection
     void setEncryption(Encryption c);
     //void setTsConnection(int tsSocket);
     int connectToTs(unsigned int port);
-    void ts3Login(const char * loginfile);
+    void sendTextFileCommands(int socket, const char * loginfile);
     void setClientConnection(int clientSocket);
     
     int startServer(void); //returns 0 for no error...
