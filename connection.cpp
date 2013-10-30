@@ -76,3 +76,18 @@ int Connection::connectToTs(unsigned int port)
   return TRUE;
 }
 
+void Connection::setClientConnection(int clientSocket)
+{
+  this->clientSock = clientSocket;
+}
+
+int Connection::startServer()
+{
+  const char * msg;
+  
+  msg = crypt.encrypt_msg("connected");
+  send(clientSock, msg, strlen(msg), 0);
+  
+  return 0;
+}
+
