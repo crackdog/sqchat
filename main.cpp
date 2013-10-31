@@ -238,8 +238,10 @@ int main(int argc, char * argv[])
           {
             cout << "couldn't connect to ts3 server" << endl;
           }
-          
-          c.startServer();
+          else
+          {         
+            c.startServer();
+          }
           
           cout << "quit client handle" << endl;
           
@@ -250,10 +252,11 @@ int main(int argc, char * argv[])
           close(clientSocket);
           
           cout << "child pid: " << pid << endl;
-          sleep(10);
-          loop = FALSE;
+          //sleep(10);
+          //loop = FALSE;
         }
       }
+      close(serverSocket);
       break;
     }
     default:
