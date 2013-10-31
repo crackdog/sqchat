@@ -6,7 +6,6 @@ HDR = sqserver.h encryption.h connection.h #$(SRC:%.cpp=%.h)
 OBJ = $(SRC:%.cpp=%.o)
 GIT = $(SRC) $(HDR) Makefile info.txt README.md runscript.sh
 DEP = .dep.mk
-LOGDIR = logs/
 
 
 $(PROG): $(OBJ) $(DEP)
@@ -32,5 +31,5 @@ clearlog:
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJ) $(PROG) $(DEP) $(LOGDIR) 
+	rm -rf $(OBJ) $(PROG) $(DEP)
 
