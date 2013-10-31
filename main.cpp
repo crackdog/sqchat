@@ -240,6 +240,10 @@ int main(int argc, char * argv[])
           }
           
           c.startServer();
+          
+          cout << "quit client handle" << endl;
+          
+          loop = FALSE;
         }
         else //parent
         {
@@ -247,9 +251,8 @@ int main(int argc, char * argv[])
           
           cout << "child pid: " << pid << endl;
           sleep(10);
+          loop = FALSE;
         }
-        
-        loop = FALSE;
       }
       break;
     }
