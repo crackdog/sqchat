@@ -43,3 +43,4 @@ Thumbs.db
 .dep.mk
 sqserver
 *.key
+*.conf
