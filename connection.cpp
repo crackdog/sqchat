@@ -13,6 +13,11 @@ Connection::Connection()
 Connection::~Connection()
 {
   cout << "destruct..." << endl;
+  closeConnections();
+}
+
+void Connection::closeConnections()
+{
   if(this->clientSock != -1)
   {
     close(clientSock);
@@ -107,26 +112,28 @@ int Connection::startServer()
   int bytes;
   char * msgbuffer = new char[BUF_SIZE];
   
-  msg = crypt.encrypt_msg("connected");
-  send(clientSock, msg, strlen(msg), 0);
-  
-  sendTextFileCommands(ts3Sock, CLOGINFILENAME);
-  
-  while(conditions())
+  if(conditions())
   {
+    //sending test messagt to client
+    msg = crypt.encrypt_msg("connected");
+    send(clientSock, msg, strlen(msg), 0);
+    
+    //ts3 server login...
+    sendTextFileCommands(ts3Sock, CLOGINFILENAME);
+    
+    while(conditions())
+    {
     //building select structures
     //select...
-    //if new msg at clientSocket
-    //if new msg at ts3Socket
-    //else...
-    break;
+    //if new msg at clientSock
+    //if new msg at ts3Sock
+    //else error output...
+      break;
+    }
   }
   
-  sleep(5);
-  
-  send(ts3Sock, "quit\n", strlen("quit\n"), 0);
-  
   //destructing...
+  closeConnections();
   delete msgbuffer;
   
   return 0;

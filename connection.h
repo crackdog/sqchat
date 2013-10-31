@@ -12,6 +12,7 @@ class Connection
     int clientSock;
     
     int conditions(void); //0 = false, 1 = true
+    void closeConnections(void);
     
   public:
     Connection();
