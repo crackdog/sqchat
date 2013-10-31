@@ -103,15 +103,31 @@ void Connection::sendTextFileCommands(int socket, const char * loginfile)
 int Connection::startServer()
 {
   const char * msg;
+  int sendSocket, recvSocket;
+  int bytes;
+  char * msgbuffer = new char[BUF_SIZE];
   
   msg = crypt.encrypt_msg("connected");
   send(clientSock, msg, strlen(msg), 0);
   
   sendTextFileCommands(ts3Sock, CLOGINFILENAME);
   
+  while(conditions())
+  {
+    //building select structures
+    //select...
+    //if new msg at clientSocket
+    //if new msg at ts3Socket
+    //else...
+    break;
+  }
+  
   sleep(5);
   
   send(ts3Sock, "quit\n", strlen("quit\n"), 0);
+  
+  //destructing...
+  delete msgbuffer;
   
   return 0;
 }
