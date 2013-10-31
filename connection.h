@@ -13,6 +13,7 @@ class Connection
     
     int conditions(void); //0 = false, 1 = true
     void closeConnections(void);
+    int msgforward(int sendSocket, int recvSocket);
     
   public:
     Connection();
