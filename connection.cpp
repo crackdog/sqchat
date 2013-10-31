@@ -4,8 +4,8 @@
 
 Connection::Connection()
 {
-  this->clientSock = -1;
-  this->ts3Sock = -1;
+  this->clientSocket = -1;
+  this->ts3Socket = -1;
   
   printf("created...\n");
 }
@@ -18,13 +18,13 @@ Connection::~Connection()
 
 void Connection::closeConnections()
 {
-  if(this->clientSock != -1)
+  if(this->clientSocket != -1)
   {
-    close(clientSock);
+    close(clientSocket);
   }
-  if(this->ts3Sock != -1)
+  if(this->ts3Socket!= -1)
   {
-    close(ts3Sock);
+    close(ts3Socket);
   }
 }
 
@@ -32,8 +32,8 @@ int Connection::conditions()
 {
   int ret;
   
-  ret = this->clientSock != -1;
-  ret = ret && this->ts3Sock != -1;
+  ret = this->clientSocket != -1;
+  ret = ret && this->ts3Socket != -1;
   
   return ret;
 }
@@ -76,14 +76,14 @@ int Connection::connectToTs(unsigned int port)
     return FALSE;
   }
   
-  this->ts3Sock = s;
+  this->ts3Socket = s;
 
   return TRUE;
 }
 
-void Connection::setClientConnection(int clientSocket)
+void Connection::setClientConnection(int client_socket)
 {
-  this->clientSock = clientSocket;
+  this->clientSocket = client_socket;
 }
 
 void Connection::sendTextFileCommands(int socket, const char * loginfile)
@@ -108,26 +108,63 @@ void Connection::sendTextFileCommands(int socket, const char * loginfile)
 int Connection::startServer()
 {
   const char * msg;
-  int sendSocket, recvSocket;
-  int bytes;
+  int bytes, max;
   char * msgbuffer = new char[BUF_SIZE];
+  fd_set fds;
+  struct timeval timer;
   
   if(conditions())
   {
     //sending test messagt to client
     msg = crypt.encrypt_msg("connected");
-    send(clientSock, msg, strlen(msg), 0);
+    send(clientSocket, msg, strlen(msg), 0);
     
     //ts3 server login...
-    sendTextFileCommands(ts3Sock, CLOGINFILENAME);
+    sendTextFileCommands(ts3Socket, CLOGINFILENAME);
     
     while(conditions())
     {
-    //building select structures
-    //select...
-    //if new msg at clientSock
-    //if new msg at ts3Sock
-    //else error output...
+      //building select structures
+      FD_ZERO(&fds);
+      FD_SET(clientSocket, &fds);
+      FD_SET(ts3Socket, &fds);
+      max = clientSocket > ts3Socket ? clientSocket : ts3Socket;
+      
+      //creating timer structure
+      timer.tv_sec = 2;
+      timer.tv_usec = 0;
+      
+      //clearing buffer
+      memset(msgbuffer, '\0', BUF_SIZE);
+      
+      //select...
+      if(select(max + 1, &fds, NULL, NULL, &timer) == -1)
+      {
+        //error...
+        cout << "error at select" << endl;
+        closeConnections();
+      }
+      
+      if(FD_ISSET(clientSocket, &fds)) //if new msg at clientSocket
+      {
+        
+      }
+      else if(FD_ISSET(ts3Socket, &fds)) //if new msg at ts3Socket
+      {
+        
+      }
+      else //else timer...
+      {
+        const char * clientlist = "clientlist\n";
+        
+        bytes = send(ts3Socket, clientlist, strlen(clientlist), 0);
+        if(bytes == -1)
+        {
+          //error
+          cout << "error at timer send..." << endl;
+          closeConnections();
+        }
+      }
       break;
     }
   }
