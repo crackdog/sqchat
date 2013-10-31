@@ -21,10 +21,12 @@ void Connection::closeConnections()
   if(this->clientSocket != -1)
   {
     close(clientSocket);
+    this->clientSocket = -1;
   }
   if(this->ts3Socket!= -1)
   {
     close(ts3Socket);
+    this->ts3Socket = -1;
   }
 }
 
@@ -105,6 +107,35 @@ void Connection::sendTextFileCommands(int socket, const char * loginfile)
   }
 }
 
+int Connection::msgforward(int recvFromSocket, int sendToSocket)
+{
+  int bytes, ret;
+  char * msgbuffer = new char[BUF_SIZE];
+  
+  ret = TRUE;
+  
+  bytes = recv(recvFromSocket, msgbuffer, BUF_SIZE, 0);
+  if(bytes == -1 || bytes == 0)
+  {
+    //error
+    cout << "error at client recv..." << endl;
+    ret = FALSE;
+  }
+  else
+  {
+    //send msgbuffer to ts3 server
+    bytes = send(sendToSocket, msgbuffer, strlen(msgbuffer), 0);
+    if(bytes == -1 || bytes == 0)
+    {
+      //error
+      cout << "error at client recv send..." << endl;
+      ret = FALSE;
+    }
+  }
+  
+  return ret; 
+}
+
 int Connection::startServer()
 {
   const char * msg;
@@ -131,7 +162,7 @@ int Connection::startServer()
       max = clientSocket > ts3Socket ? clientSocket : ts3Socket;
       
       //creating timer structure
-      timer.tv_sec = 2;
+      timer.tv_sec = 20;
       timer.tv_usec = 0;
       
       //clearing buffer
@@ -147,11 +178,21 @@ int Connection::startServer()
       
       if(FD_ISSET(clientSocket, &fds)) //if new msg at clientSocket
       {
-        
+        if(!msgforward(clientSocket, ts3Socket))
+        {
+          //error
+          cout << "error at msgforward from clientSocket to ts3Socket" << endl;
+          closeConnections();
+        }
       }
       else if(FD_ISSET(ts3Socket, &fds)) //if new msg at ts3Socket
       {
-        
+        if(!msgforward(ts3Socket, clientSocket))
+        {
+          //error
+          cout << "error at msgforward from ts3Socket to clientSocket" << endl;
+          closeConnections();
+        }
       }
       else //else timer...
       {
@@ -165,13 +206,14 @@ int Connection::startServer()
           closeConnections();
         }
       }
-      break;
     }
   }
   
   //destructing...
   closeConnections();
   delete msgbuffer;
+  
+  exit(0);
   
   return 0;
 }
