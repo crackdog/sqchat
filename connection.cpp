@@ -107,7 +107,11 @@ int Connection::startServer()
   msg = crypt.encrypt_msg("connected");
   send(clientSock, msg, strlen(msg), 0);
   
-  sendTextFileCommands(clientSock, "README.md");
+  sendTextFileCommands(ts3Sock, CLOGINFILENAME);
+  
+  sleep(5);
+  
+  send(ts3Sock, "quit\n", strlen("quit\n"), 0);
   
   return 0;
 }

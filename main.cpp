@@ -195,20 +195,20 @@ int main(int argc, char * argv[])
     case 5: //starting server functions...
     {
       int loop = TRUE;
-      while(loop)
+      int serverSocket, clientSocket;
+      socklen_t client_addr_len;
+      struct sockaddr_in client_addr;
+      
+      //creating server socket
+      serverSocket = init_server_socket(SERVER_PORT);
+      if(serverSocket == -1)
       {
-        int serverSocket, clientSocket;
-        socklen_t client_addr_len;
-        struct sockaddr_in client_addr;
-        
-        //creating server socket
-        serverSocket = init_server_socket(SERVER_PORT);
-        if(serverSocket == -1)
-        {
-          cerr << "error at 'init_server_socket()'" << endl;
-          return 5;
-        }
-        
+        cerr << "error at 'init_server_socket()'" << endl;
+        return 5;
+      }
+      
+      while(loop)
+      {      
         //waiting for connection
         clientSocket = accept(serverSocket, (struct sockaddr *) &client_addr, &client_addr_len);
         if(clientSocket == -1)
@@ -218,26 +218,36 @@ int main(int argc, char * argv[])
         }
       
         //create new fork and handle the client
+        pid_t pid;
         
+        pid = fork();
         
-        Encryption e;
-        Connection c;
-        
-        e.loadKeyFile(keyfile);
-        c.setEncryption(e);
-        
-        c.setClientConnection(clientSocket);
-        
-        if(!c.connectToTs(TS3_SERVER_PORT))
+        if(pid == 0) //child
         {
-          cout << "couldn't connect to ts3 server" << endl;
+          Encryption e;
+          Connection c;
+          
+          close(serverSocket);
+          
+          e.loadKeyFile(keyfile);
+          c.setEncryption(e);
+          
+          c.setClientConnection(clientSocket);
+          
+          if(!c.connectToTs(TS3_SERVER_PORT))
+          {
+            cout << "couldn't connect to ts3 server" << endl;
+          }
+          
+          c.startServer();
         }
-        else
+        else //parent
         {
-          c.ts3Login(CLOGINFILENAME);
+          close(clientSocket);
+          
+          cout << "child pid: " << pid << endl;
+          sleep(10);
         }
-        
-        c.startServer();
         
         loop = FALSE;
       }
