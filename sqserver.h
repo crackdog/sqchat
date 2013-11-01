@@ -17,6 +17,7 @@ using namespace std;
 #include <netdb.h>
 #include <signal.h>
 #include <time.h>
+#include <wait.h>
 
 #include <iostream>
 //------------------------

@@ -1,6 +1,7 @@
 #include "sqserver.h"
 #include "encryption.h"
 #include "connection.h"
+#include "daemon.h"
 
 using namespace std;
 
