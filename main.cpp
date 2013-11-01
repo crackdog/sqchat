@@ -208,6 +208,9 @@ int main(int argc, char * argv[])
         return 5;
       }
       
+      //setting sig handler
+      set_sigchld_handler();
+      
       while(loop)
       {      
         //waiting for connection
@@ -229,6 +232,8 @@ int main(int argc, char * argv[])
           Connection c;
           
           close(serverSocket);
+          
+          setSigConnection(&c);
           
           e.loadKeyFile(keyfile);
           c.setEncryption(e);
