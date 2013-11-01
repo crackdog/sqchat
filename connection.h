@@ -13,7 +13,9 @@ class Connection
     
     int conditions(void); //0 = false, 1 = true
     void closeConnections(void);
-    int msgforward(int recvFromSocket, int sendToSocket);
+    int msgforward(int recvFromSocket, int sendToSocket, int allMsgAllowed);
+    int isAllowedMsg(const char * msg);
+    size_t stringlen(const char * str);
     
   public:
     Connection();
