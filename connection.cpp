@@ -30,6 +30,12 @@ void Connection::closeConnections()
   }
 }
 
+void Connection::sigterm()
+{
+  //when a term signal comes...
+  closeConnections();
+}
+
 int Connection::conditions()
 {
   int ret;

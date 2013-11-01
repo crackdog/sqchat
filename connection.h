@@ -25,6 +25,8 @@ class Connection
     void sendTextFileCommands(int socket, const char * loginfile);
     void setClientConnection(int client_socket);
     
+    void sigterm(void);
+    
     int startServer(void); //returns 0 for no error...
 };
 
