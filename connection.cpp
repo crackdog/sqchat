@@ -113,7 +113,7 @@ void Connection::sendTextFileCommands(int socket, const char * loginfile)
   }
 }
 
-int Connection::msgforward(int recvFromSocket, int sendToSocket, int allMsgAllowed)
+int Connection::msgforward(int recvFromSocket, int sendToSocket, int fromClient)
 {
   int bytes, ret;
   size_t len;
@@ -131,8 +131,11 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket, int allMsgAllow
   }
   else
   {
-    if(!allMsgAllowed)
+    if(fromClient)
     {
+      //decrypting msg...
+      strncpy(msgbuffer, crypt.decrypt_msg(msgbuffer), BUF_SIZE);
+      
       if(!isAllowedMsg(msgbuffer))
       {
         memset(msgbuffer, '\0', BUF_SIZE);
@@ -140,7 +143,6 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket, int allMsgAllow
       }
       //calculating string length
       len = stringlen(msgbuffer);
-      cout << len << " ... " << stringlen(msgbuffer) << endl;
     }
     else
     {
@@ -167,6 +169,7 @@ int Connection::isAllowedMsg(const char * msg)
     //"channellist", 
     "sendtextmessage",
     "pokeclient",
+    "help", 
     "quit",
     NULL};
   
@@ -242,7 +245,7 @@ int Connection::startServer()
       
       if(FD_ISSET(clientSocket, &fds)) //if new msg at clientSocket
       {
-        if(!msgforward(clientSocket, ts3Socket, FALSE))
+        if(!msgforward(clientSocket, ts3Socket, TRUE))
         {
           //error
           cout << "error at msgforward from clientSocket to ts3Socket" << endl;
@@ -251,7 +254,7 @@ int Connection::startServer()
       }
       else if(FD_ISSET(ts3Socket, &fds)) //if new msg at ts3Socket
       {
-        if(!msgforward(ts3Socket, clientSocket, TRUE))
+        if(!msgforward(ts3Socket, clientSocket, FALSE))
         {
           //error
           cout << "error at msgforward from ts3Socket to clientSocket" << endl;
