@@ -76,6 +76,8 @@ void sigterm_handler(int sig)
     c->sigterm();
   }
   
+  cout << "sigterm_handler(" << sig << ")" << endl;
+  
   exit(0);
 }
 
