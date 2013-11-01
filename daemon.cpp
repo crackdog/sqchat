@@ -1,5 +1,13 @@
 #include "sqserver.h"
 #include "daemon.h"
+#include "connection.h"
+
+Connection * c;
+
+void setSigConnection(Connection * con)
+{
+  c = con;
+}
 
 int daemonize(void)
 {
@@ -63,6 +71,10 @@ void set_sigchld_handler()
 
 void sigterm_handler(int sig)
 {
+  if(c != 0)
+  {
+    c->sigterm();
+  }
   
   exit(0);
 }
