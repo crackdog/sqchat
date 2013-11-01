@@ -113,12 +113,14 @@ void Connection::sendTextFileCommands(int socket, const char * loginfile)
   }
 }
 
-int Connection::msgforward(int recvFromSocket, int sendToSocket)
+int Connection::msgforward(int recvFromSocket, int sendToSocket, int allMsgAllowed)
 {
   int bytes, ret;
+  size_t len;
   char * msgbuffer = new char[BUF_SIZE];
   
   ret = TRUE;
+  memset(msgbuffer, '\0', BUF_SIZE);
   
   bytes = recv(recvFromSocket, msgbuffer, BUF_SIZE, 0);
   if(bytes == -1 || bytes == 0)
@@ -129,8 +131,24 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket)
   }
   else
   {
+    if(!allMsgAllowed)
+    {
+      if(!isAllowedMsg(msgbuffer))
+      {
+        memset(msgbuffer, '\0', BUF_SIZE);
+        strncpy(msgbuffer, "clientlist\n", strlen("clientlist\n"));
+      }
+      //calculating string length
+      len = stringlen(msgbuffer);
+      cout << len << " ... " << stringlen(msgbuffer) << endl;
+    }
+    else
+    {
+      len = strlen(msgbuffer);
+    }
+    
     //send msgbuffer to ts3 server
-    bytes = send(sendToSocket, msgbuffer, strlen(msgbuffer), 0);
+    bytes = send(sendToSocket, msgbuffer, len, 0);
     if(bytes == -1 || bytes == 0)
     {
       //error
@@ -139,7 +157,47 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket)
     }
   }
   
-  return ret; 
+  return ret;
+}
+
+int Connection::isAllowedMsg(const char * msg)
+{
+  const char * allowedmsg[] = 
+    {"clientlist",
+    //"channellist", 
+    "sendtextmessage",
+    "pokeclient",
+    "quit",
+    NULL};
+  
+  int i, ret;
+  ret = FALSE;
+  i = 0;
+  
+  while(allowedmsg[i] != NULL)
+  {
+    if(strncmp(msg, allowedmsg[i], strlen(allowedmsg[i])) == 0)
+    {
+      ret = TRUE;
+    }
+    i++;
+  }
+  
+  return ret;
+}
+
+size_t Connection::stringlen(const char * str)
+{
+  size_t ret = 0;
+  while(str[ret] != '\0')
+  {
+    ret++;
+    if(str[ret-1] == '\n')
+    {
+      break;
+    }
+  }
+  return ret;
 }
 
 int Connection::startServer()
@@ -184,7 +242,7 @@ int Connection::startServer()
       
       if(FD_ISSET(clientSocket, &fds)) //if new msg at clientSocket
       {
-        if(!msgforward(clientSocket, ts3Socket))
+        if(!msgforward(clientSocket, ts3Socket, FALSE))
         {
           //error
           cout << "error at msgforward from clientSocket to ts3Socket" << endl;
@@ -193,7 +251,7 @@ int Connection::startServer()
       }
       else if(FD_ISSET(ts3Socket, &fds)) //if new msg at ts3Socket
       {
-        if(!msgforward(ts3Socket, clientSocket))
+        if(!msgforward(ts3Socket, clientSocket, TRUE))
         {
           //error
           cout << "error at msgforward from ts3Socket to clientSocket" << endl;
