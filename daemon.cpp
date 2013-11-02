@@ -92,7 +92,7 @@ void sigchld_handler(int sig)
   if(WIFEXITED(status))
   {  
     printf("Process %d exited with %i and signal %i\n" , pid , WEXITSTATUS(status), sig);
-    exit(0);
+    //exit(0);
   }
 }
 
