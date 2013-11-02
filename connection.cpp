@@ -134,20 +134,7 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket, int fromClient)
     if(fromClient)
     {
       //decrypting msg...
-      //strncpy(msgbuffer, crypt.decrypt_msg(msgbuffer), BUF_SIZE);
-      
-      cout << msgbuffer << " --- ";
-      cout << crypt.decrypt_msg("0T0Cl1VtTS19qzzIlw==\n") << " +++ ";
-      cout << crypt.decrypt_msg(crypt.encrypt_msg(msgbuffer)) << " *** " << endl;
-      //cout << crypt.decrypt_msg(msgbuffer) << endl;
-      char test[] = {0x31, 0x44, 0x35, 0x70, 0x2b, 0x51, 0x3d, 0x3d, 0xd, 0xa, '\0'};
-      cout << "test: " << test << endl;
-      crypt.decrypt_msg(test);
-      for(size_t x = 0; x < strlen(msgbuffer); x++)
-      {
-        cout << "'" << hex << (int) msgbuffer[x] << "' " << flush;
-      }
-      cout << endl;
+      strncpy(msgbuffer, crypt.decrypt_msg(msgbuffer), BUF_SIZE);
       
       if(!isAllowedMsg(msgbuffer))
       {
