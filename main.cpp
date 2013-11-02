@@ -238,6 +238,8 @@ int main(int argc, char * argv[])
           e.loadKeyFile(keyfile);
           c.setEncryption(e);
           
+          c.setEncryption(FALSE);
+          
           c.setClientConnection(clientSocket);
           
           if(!c.connectToTs(TS3_SERVER_PORT))
