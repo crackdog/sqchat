@@ -10,6 +10,7 @@ class Connection
     Encryption crypt;
     int ts3Socket;
     int clientSocket;
+    int encrypt;
     
     int conditions(void); //0 = false, 1 = true
     void closeConnections(void);
@@ -22,10 +23,10 @@ class Connection
     ~Connection();
     
     void setEncryption(Encryption c);
-    //void setTsConnection(int tsSocket);
     int connectToTs(unsigned int port);
     void sendTextFileCommands(int socket, const char * loginfile);
     void setClientConnection(int client_socket);
+    void setEncryption(int on);
     
     void sigterm(void);
     

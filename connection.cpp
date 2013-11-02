@@ -6,6 +6,7 @@ Connection::Connection()
 {
   this->clientSocket = -1;
   this->ts3Socket = -1;
+  this->encrypt = TRUE;
   
   printf("created...\n");
 }
@@ -14,6 +15,11 @@ Connection::~Connection()
 {
   cout << "destruct..." << endl;
   closeConnections();
+}
+
+void Connection::setEncryption(int on)
+{
+  this->encrypt = on;
 }
 
 void Connection::closeConnections()
@@ -133,8 +139,11 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket, int fromClient)
   {
     if(fromClient)
     {
-      //decrypting msg...
-      strncpy(msgbuffer, crypt.decrypt_msg(msgbuffer), BUF_SIZE);
+      if(encrypt)
+      {
+        //decrypting msg...
+        strncpy(msgbuffer, crypt.decrypt_msg(msgbuffer), BUF_SIZE);
+      }
       
       if(!isAllowedMsg(msgbuffer))
       {
@@ -146,7 +155,12 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket, int fromClient)
     }
     else // !fromClient -> toClient
     {
-      strncpy(msgbuffer, crypt.encrypt_msg(msgbuffer), BUF_SIZE);
+      if(encrypt)
+      {
+        //encrypt msg
+        strncpy(msgbuffer, crypt.encrypt_msg(msgbuffer), BUF_SIZE);
+      }
+      
       len = strlen(msgbuffer);
     }
     
