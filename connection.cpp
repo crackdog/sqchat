@@ -144,8 +144,9 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket, int fromClient)
       //calculating string length
       len = stringlen(msgbuffer);
     }
-    else
+    else // !fromClient -> toClient
     {
+      strncpy(msgbuffer, crypt.encrypt_msg(msgbuffer), BUF_SIZE);
       len = strlen(msgbuffer);
     }
     
