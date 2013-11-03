@@ -2,12 +2,12 @@
 
 SERVERBIN="sqserver"
 PIDFILE="${SERVERBIN}.pid"
-LOGDIR="$(pwd)/logs"
-CONFDIR="$(pwd)/conf"
-COMMANDLINE_PARAMETERS="-s ${LOGDIR}"
+COMMANDLINE_PARAMETERS="-s"
+OUTPUT_FILE="test.log"
 
 start() {
-  PID=$(./${SERVERBIN} ${COMMANDLINE_PARAMETERS})
+  ./$SERVERBIN $COMMANDLINE_PARAMETERS > $OUTPUT_FILE 2>&1 &
+  PID=$!
   echo -n $PID > $PIDFILE
   echo "server started with pid: $PID"
 }
