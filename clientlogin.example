@@ -1,0 +1,4 @@
+use 1
+login USERNAME PASSWORD
+clientupdate client_nickname=NICKNAME
+servernotifyregister event=textprivate
