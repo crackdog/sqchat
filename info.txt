@@ -1,0 +1,9 @@
+you need following files:
+  - clientlogin.conf: these lines are send to the ts3 server when 
+                      a new client connects to sqserver
+                      you can use something like my clientlogin.example
+
+  - test.key:         the key for the encryption
+                      you can create it by using following command:
+                      ./sqserver -g [number of bytes] > test.key
+
