@@ -21,14 +21,6 @@ dep: $(DEP)
 	
 -include $(DEP)
 
-.PHONY: addgit
-addgit:
-	git add $(GIT)
-	
-.PHONY: clearlog
-clearlog:
-	rm -rf $(LOGDIR)
-
 .PHONY: clean
 clean:
 	rm -rf $(OBJ) $(PROG) $(DEP) $(LOG)
