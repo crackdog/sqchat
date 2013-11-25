@@ -2,6 +2,8 @@
 #include "connection.h"
 #include "encryption.h"
 
+const char *clientlist = "clientlist -uid";
+
 Connection::Connection()
 {
   this->clientSocket = -1;
@@ -148,7 +150,7 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket, int fromClient)
       if(!isAllowedMsg(msgbuffer))
       {
         memset(msgbuffer, '\0', BUF_SIZE);
-        strncpy(msgbuffer, "clientlist\n", strlen("clientlist\n"));
+        strncpy(msgbuffer, clientlist, strlen(clientlist));
       }
       //calculating string length
       len = stringlen(msgbuffer);
@@ -180,7 +182,7 @@ int Connection::msgforward(int recvFromSocket, int sendToSocket, int fromClient)
 int Connection::isAllowedMsg(const char * msg)
 {
   const char * allowedmsg[] = 
-    {"clientlist",
+    {"clientlist", //maybe security problems...maybe clientlist -ip...
     //"channellist", 
     "sendtextmessage",
     "pokeclient",
