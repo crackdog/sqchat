@@ -263,8 +263,24 @@ int Encryption::loadKeyFile(const char * filename)
 {
   FILE * keyfile;
   char * buffer = new char[BUF_SIZE];
-  
-  keyfile = fopen(filename, "r");
+    
+  memset(buffer, 0, BUF_SIZE);
+  //user buffer for the complete path filename...
+  //only do this if ther is no '/' in "filename".
+  if(strstr(filename, "/") == NULL)
+  {
+      if(getcwd(buffer, BUF_SIZE) != NULL)
+      {
+          strncat(buffer, "/", 1);
+          strncat(buffer, filename, BUF_SIZE);
+      }
+      else
+      {
+          strncpy(buffer, filename, BUF_SIZE);
+      }
+  }
+
+  keyfile = fopen(buffer, "r");
   
   if(keyfile != NULL)
   {
